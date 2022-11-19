@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EcbRatesUpdateService": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
