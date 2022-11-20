@@ -5,7 +5,7 @@ on: push
 jobs:
   build:
     name: Building image
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
