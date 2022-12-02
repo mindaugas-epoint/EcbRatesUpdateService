@@ -28,5 +28,5 @@ jobs:
           docker buildx build \
             --progress plain \
             --platform=linux/amd64,linux/arm64 \
-            -t mindaugasa/ecb_rates_update_service:latest \
+            -t mindaugas-epoint/ecb_rates_update_service:latest \
             --push \
