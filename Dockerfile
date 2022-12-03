@@ -20,4 +20,4 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EcbRatesUpdateService.dll"]
 
 RUN chmod +x change-time-zone.sh
-CMD /bin/bash ./change-time-zone.sh
+CMD ./change-time-zone.sh
