@@ -22,7 +22,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+      
+      - name: Add GitHub NuGet Source
+        run: |
+          dotnet nuget add source --username $OWNER --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/$OWNER/index.json"
+          dotnet nuget list source
+        env:
+          GITHUB_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+          OWNER: ${{ secrets.PACKAGE_OWNER }}
+      
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
