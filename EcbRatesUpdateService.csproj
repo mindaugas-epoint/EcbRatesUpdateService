@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ePoint.EcbRates" Version="1.0.0" />
     <PackageReference Include="ePointLt.DatabaseAccessLayer" Version="1.0.1" />
+    <PackageReference Include="ePointLt.EcbRates" Version="1.0.0" />
     <PackageReference Include="ePointLt.SendEmail" Version="1.0.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
