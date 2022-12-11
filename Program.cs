@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Database_Access_Layer;
-using EcbRates;
 using SendEmail;
 using Serilog;
 using Microsoft.Extensions.Configuration;
@@ -48,7 +47,7 @@ namespace EcbRatesUpdateService
                         services.AddSingleton<IDbContext>(sp => new MsSqlDB(connectionString));
                     }
                     services.AddSingleton<ISendEmail, SendEmailUsingSendGrid>();
-                    services.AddSingleton<IEcbRates, EcbRatesBankLt>();
+                    services.AddSingleton<IEcbRatesUpdate, EcbRatesUpdate>();
                     services.Configure<EcbRatesUpdateWorker>(config);
                     services.AddHostedService<EcbRatesUpdateWorker>();
                 })

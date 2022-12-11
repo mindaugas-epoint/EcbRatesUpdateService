@@ -1,5 +1,4 @@
 ﻿using Database_Access_Layer;
-using EcbRates;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using SendEmail;
@@ -13,14 +12,14 @@ namespace EcbRatesUpdateService
         private readonly ILogger _Logger;
         private readonly ISendEmail _SendEmail;
         private readonly IConfiguration _Config;
-        private static IEcbRates _EcbRates;
+        private static IEcbRatesUpdate _EcbRatesUpdate;
 
-        public EcbRatesUpdateWorker(IDbContext dbContext, ILogger logger, ISendEmail sendEmail, IEcbRates ecbRates, IConfiguration config)
+        public EcbRatesUpdateWorker(IDbContext dbContext, ILogger logger, ISendEmail sendEmail, IEcbRatesUpdate ecbRatesUpdate, IConfiguration config)
         {
             _DbContext = dbContext;
             _Logger = logger;
             _SendEmail = sendEmail;
-            _EcbRates= ecbRates;
+            _EcbRatesUpdate = ecbRatesUpdate;
             _Config = config;
         }
 
@@ -45,11 +44,11 @@ namespace EcbRatesUpdateService
                     {
                         if (dbConfig.SqlServerType == "mysql")
                         {
-                            await _EcbRates.UpdateEcbRatesOneByOne(_DbContext);
+                            await _EcbRatesUpdate.UpdateEcbRatesOneByOne(_DbContext);
                         }
                         else
                         {
-                            await _EcbRates.UpdateEcbRates(_DbContext);
+                            await _EcbRatesUpdate.UpdateEcbRates(_DbContext);
                         }
 
                         _Logger.Information("ECB rates update successfully completed.");
