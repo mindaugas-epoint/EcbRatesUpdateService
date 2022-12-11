@@ -14,8 +14,6 @@ namespace EcbRatesUpdateService
         private readonly ISendEmail _SendEmail;
         private readonly IConfiguration _Config;
         private static IEcbRates _EcbRates;
-        private static DateTime _StartTime;
-        private static DateTime _StopTime;
 
         public EcbRatesUpdateWorker(IDbContext dbContext, ILogger logger, ISendEmail sendEmail, IEcbRates ecbRates, IConfiguration config)
         {
@@ -28,22 +26,19 @@ namespace EcbRatesUpdateService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            bool retryOnFailedUpdate = false;
             DBConfig dbConfig = _Config.GetSection("DbConfig").Get<DBConfig>();
             EmailConfig emailConfig = new EmailConfig(_Config.GetSection("EmailConfig")["EmailFrom"],
                                                         _Config.GetSection("EmailConfig")["SendgridApiKey"],
                                                         _Config.GetSection("EmailConfig:EmailReceivers").Get<IEnumerable<EmailReceiver>>());
 
+            DateTime startTime = DateTime.Parse(_Config.GetSection("ServiceSettings")["StartTime"], System.Globalization.CultureInfo.CurrentCulture);
+            DateTime stopTime = DateTime.Parse(_Config.GetSection("ServiceSettings")["StopTime"], System.Globalization.CultureInfo.CurrentCulture);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 DateTime currentTime = DateTime.Now;
 
-                if (!retryOnFailedUpdate)
-                {
-                    GetUpdateTime();
-                }
-
-                if ((currentTime > _StartTime && currentTime < _StopTime))
+                if (currentTime > startTime && currentTime < stopTime)
                 {
                     _Logger.Information("ECB rates update started.");
                     try
@@ -68,15 +63,11 @@ namespace EcbRatesUpdateService
                         {
                             _Logger.Error(ex.ToString());
                         }
-
-                        retryOnFailedUpdate = false;
                     }
                     catch (Exception ex)
                     {
-                        retryOnFailedUpdate = true;
-
-                        _StartTime = currentTime.AddMinutes(5);
-                        _StopTime = currentTime.AddMinutes(6);
+                        startTime = currentTime.AddMinutes(5);
+                        stopTime = currentTime.AddMinutes(6);
 
                         _Logger.Error(ex.ToString());
 
@@ -97,13 +88,6 @@ namespace EcbRatesUpdateService
                 await Task.Delay(60000, stoppingToken);
             }
 
-
-        }
-
-        private void GetUpdateTime()
-        {
-            _StartTime = DateTime.Parse(_Config.GetSection("ServiceSettings")["StartTime"], System.Globalization.CultureInfo.CurrentCulture);
-            _StopTime = DateTime.Parse(_Config.GetSection("ServiceSettings")["StopTime"], System.Globalization.CultureInfo.CurrentCulture);
 
         }
     }
