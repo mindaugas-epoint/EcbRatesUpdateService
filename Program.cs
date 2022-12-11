@@ -17,7 +17,7 @@ namespace EcbRatesUpdateService
             IConfiguration config = new ConfigurationBuilder()
                     .SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
+                    .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
                     .Build();
 
             DBConfig dbConfig = config.GetSection("DbConfig").Get<DBConfig>();
